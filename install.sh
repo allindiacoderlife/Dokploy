@@ -136,8 +136,12 @@ install_dokploy() {
 
     echo "Swarm initialized"
 
+    # Clean up any existing dokploy services before creating new ones
+    docker service rm dokploy-postgres dokploy dokploy-redis 2>/dev/null || true
+    
     docker network rm -f dokploy-network 2>/dev/null
-    docker network create --driver overlay --attachable dokploy-network
+    # Use a specific subnet to avoid conflicts with Coolify and other networks
+    docker network create --driver overlay --attachable --subnet=172.20.0.0/16 dokploy-network
 
     echo "Network created"
 
@@ -179,6 +183,10 @@ install_dokploy() {
       dokploy/dokploy:latest
 
     sleep 4
+
+    # Stop any existing dokploy-traefik container
+    docker stop dokploy-traefik 2>/dev/null || true
+    docker rm dokploy-traefik 2>/dev/null || true
 
     docker run -d \
         --name dokploy-traefik \
