@@ -33,9 +33,9 @@ install_dokploy() {
         exit 1
     fi
 
-    # check if something is running on port 8080
-    if ss -tulnp | grep ':8080 ' >/dev/null; then
-        echo "Error: something is already running on port 8080" >&2
+    # check if something is running on port 8070
+    if ss -tulnp | grep ':8070 ' >/dev/null; then
+        echo "Error: something is already running on port 8070" >&2
         exit 1
     fi
 
@@ -186,7 +186,7 @@ install_dokploy() {
         -v /etc/dokploy/traefik/traefik.yml:/etc/traefik/traefik.yml \
         -v /etc/dokploy/traefik/dynamic:/etc/dokploy/traefik/dynamic \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        -p 8080:80/tcp \
+        -p 8070:80/tcp \
         -p 8443:443/tcp \
         -p 8443:443/udp \
         traefik:v3.5.0
