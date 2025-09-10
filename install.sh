@@ -33,16 +33,16 @@ install_dokploy() {
         exit 1
     fi
 
-    # check if something is running on port 8070
-    if ss -tulnp | grep ':8070 ' >/dev/null; then
-        echo "Error: something is already running on port 8070" >&2
-        exit 1
+    # check if something is running on port 80
+    if ss -tulnp | grep ':80 ' >/dev/null; then
+        echo "Warning: Port 80 is in use. Custom domains may not work properly." >&2
+        echo "Consider stopping other services on port 80 for proper domain routing." >&2
     fi
 
-    # check if something is running on port 8443
-    if ss -tulnp | grep ':8443 ' >/dev/null; then
-        echo "Error: something is already running on port 8443" >&2
-        exit 1
+    # check if something is running on port 443
+    if ss -tulnp | grep ':443 ' >/dev/null; then
+        echo "Warning: Port 443 is in use. Custom domains may not work properly." >&2
+        echo "Consider stopping other services on port 443 for proper domain routing." >&2
     fi
 
     command_exists() {
@@ -194,9 +194,9 @@ install_dokploy() {
         -v /etc/dokploy/traefik/traefik.yml:/etc/traefik/traefik.yml \
         -v /etc/dokploy/traefik/dynamic:/etc/dokploy/traefik/dynamic \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        -p 8070:80/tcp \
-        -p 8443:443/tcp \
-        -p 8443:443/udp \
+        -p 80:80/tcp \
+        -p 443:443/tcp \
+        -p 443:443/udp \
         traefik:v3.5.0
     
     docker network connect dokploy-network dokploy-traefik
